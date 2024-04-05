@@ -125,13 +125,18 @@ app.put('/update_posts/:id', (req, res) => {
 });
 
 
-
 app.delete('/delete_posts/:id', (req, res) => {
     const id = req.params.id;
-    const postdelete = posts.find(post => post.id === id);
-    posts = posts.filter(post => post.id !== id)
-    res.status(200).json({ mes: "record delete sucessfully", postdelete: postdelete, status: 1 });
+    const postIndex = posts.findIndex(post => post.id === id);
+
+    if (postIndex === -1) {
+        res.status(400).json({ error: 'Post not found', status: 0 });
+    } else {
+        const deletedPost = posts.splice(postIndex, 1)[0];
+        res.status(200).json({ message: "Record deleted successfully", deletedPost: deletedPost, status: 1 });
+    }
 });
+
 
 
 
